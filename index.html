@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI SaaS Chat UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+    /* ================= VARIABLES ================= */
+    :root {
+      --bg-main: #0f1117;
+      --bg-sidebar: #161a23;
+      --bg-card: #1e2330;
+      --bg-input: #1a1f2b;
+
+      --text-primary: #e5e7eb;
+      --text-secondary: #9ca3af;
+
+      --accent: #6366f1;
+      --border: #2a2f3d;
+    }
+
+    /* ================= RESET ================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-primary);
+      height: 100vh;
+    }
+
+    /* ================= LAYOUT ================= */
+    .app {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .new-chat {
+      background: var(--accent);
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-item {
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .chat-item.active,
+    .chat-item:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    /* ================= CHAT AREA ================= */
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .message {
+      display: flex;
+      margin-bottom: 16px;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.ai {
+      justify-content: flex-start;
+    }
+
+    .bubble {
+      max-width: 70%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--bg-card);
+      line-height: 1.5;
+    }
+
+    .message.user .bubble {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+    }
+
+    /* ================= INPUT ================= */
+    .input-area {
+      display: flex;
+      gap: 10px;
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-main);
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+
+    .input-area input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .input-area button {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+
+    /* ================= MOBILE ================= */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .bubble {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">⚡ AI Studio</div>
+    <button class="new-chat">+ New Chat</button>
+
+    <div class="chat-list">
+      <div class="chat-item active">AI Assistant</div>
+      <div class="chat-item">Customer Support Bot</div>
+      <div class="chat-item">Content Generator</div>
+    </div>
+  </aside>
+
+  <!-- CHAT -->
+  <main class="chat-container">
+    <div class="messages" id="messages">
+      <div class="message ai">
+        <div class="bubble">
+          👋 Hi! I’m your AI assistant. How can I help?
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input id="chatInput" type="text" placeholder="Type your message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  const input = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const messages = document.getElementById("messages");
+
+  function addMessage(text, type) {
+    const msg = document.createElement("div");
+    msg.className = "message " + type;
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+
+    msg.appendChild(bubble);
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  sendBtn.onclick = () => {
+    if (!input.value.trim()) return;
+
+    addMessage(input.value, "user");
+    input.value = "";
+
+    setTimeout(() => {
+      addMessage("AI response will come from API here 🚀", "ai");
+    }, 700);
+  };
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") sendBtn.click();
+  });
+</script>
+
+</body>
+  </html>
